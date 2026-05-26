@@ -8,6 +8,8 @@ use App\Http\Repository\UserRepository;
 use App\Http\Services\BeneficiarioServices;
 use App\Http\Services\PermisoServices;
 use App\Http\Services\UserServices;
+use App\Repository\EstadoAsistenciaRepository;
+use App\Services\EstadoAsistenciaService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,11 @@ class AppServiceProvider extends ServiceProvider
             $this->app->bind(
                 PermisoServices::class,
                 PermisoRepository::class
+            );
+
+            $this->app->bind(
+                EstadoAsistenciaService::class,
+                EstadoAsistenciaRepository::class
             );
     }
 
