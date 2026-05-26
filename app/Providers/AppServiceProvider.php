@@ -12,6 +12,7 @@ use App\Http\Services\PermisoServices;
 use App\Http\Services\UserServices;
 use App\Repository\EstadoAsistenciaRepository;
 use App\Services\EstadoAsistenciaService;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,6 +52,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Schema::defaultStringLength(191);
     }
 }

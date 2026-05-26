@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['fecha_inicio', 'fecha_fin', 'status', 'user_id'])]
-#[Table('beneficiarios')]
+#[Table('becas')]
 
 
 class Beneficiario extends Model
