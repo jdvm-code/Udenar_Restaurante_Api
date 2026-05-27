@@ -21,7 +21,7 @@ class AuthController extends Controller
         try {
             $user =  $this->userService->store($request);
             $token = JWTAuth::fromUser($user);
-            Mail::to($user->email)->send(new ConfirmAccount($user));
+            // Mail::to($user->email)->send(new ConfirmAccount($user));
             return response()->json([
                 'success' => true,
                 'message' => 'User registered successfully',

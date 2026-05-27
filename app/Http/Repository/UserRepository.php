@@ -7,6 +7,7 @@ use App\Mail\ConfirmAccount;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -18,18 +19,24 @@ class UserRepository extends BaseRepository implements UserService
     }
     public function store(Request $request)
     {
-        $token = bin2hex(random_bytes(16));
-
-        // Si esto falla (por ejemplo, correo duplicado), 
-        // Laravel lanzará una excepción automáticamente hacia el controlador.
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'remember_token' => $token,
-            'role_id' => $request->role_id
-        ]);
-
-        return $user;
+        try {
+            $token =bin2hex(random_bytes(16));
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' =>Hash::make($request->password),
+                'remember_token'=> $token,
+                'role_id'=>$request->role_id
+            ]);
+            // Generate token
+            $token = JWTAuth::fromUser($user);
+            // Mail::to($user->email)->send(new ConfirmAccount($user));
+            return $user;
+        } catch (\Exception $e) {
+            // Handle the exception (e.g., log the error, return an error response)
+            Log::error('Error creating user: ' . $e->getMessage());
+            throw $e;
+        }
     }
 }
+    
