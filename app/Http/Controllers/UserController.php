@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Services\UserServices;
+use App\Http\Services\UserService;
 
 class UserController extends Controller
 {
-    public function __construct(private UserServices $userServices)
+    public function __construct(private UserService $userServices)
     {
 
     }

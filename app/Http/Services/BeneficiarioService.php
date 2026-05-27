@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Services;
 use Illuminate\Http\Request;
-interface BeneficiarioServices {
+interface BeneficiarioService {
 
     public function index(Request $request);
     public function show(int $id);

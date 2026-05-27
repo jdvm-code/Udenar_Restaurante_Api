@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Services\BeneficiarioServices;
+use App\Http\Services\BeneficiarioService;
 use App\Models\Beneficiario;
 use Illuminate\Http\Request;
 
 class BeneficiarioController extends Controller
 {
-    public function __construct(private BeneficiarioServices $beneficiarioServices)
+    public function __construct(private BeneficiarioService $beneficiarioServices)
     {
         //
      }

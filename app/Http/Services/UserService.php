@@ -2,7 +2,7 @@
 namespace App\Http\Services;
 use Illuminate\Http\Request;
 
-interface UserServices {
+interface UserService {
 
     public function index(Request $request);
     public function show(int $id);

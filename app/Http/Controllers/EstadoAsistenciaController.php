@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\EstadoAsistencia;
+use App\Http\Services\EstadoAsistenciaService;
 use Illuminate\Http\Request;
 
 class EstadoAsistenciaController extends Controller
 {
 
-    public function __construct(private EstadoAsistencia $estadoAsistencia)
+    public function __construct(private EstadoAsistenciaService $estadoAsistencia)
     {
 
     }
@@ -49,6 +48,6 @@ class EstadoAsistenciaController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->estadoAsistencia->destroy($id);
+        return $this->estadoAsistencia->delete($id);
     }
 }

@@ -1,14 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Services\AsistenciaServices;
-use App\Models\Asistencia;
+use App\Http\Controllers\Controller;
+use App\Http\Services\AsistenciaService;
 use Illuminate\Http\Request;
 
 class AsistenciaController extends Controller
 {
-    public function __construct(private AsistenciaServices $asistenciaService)
+    public function __construct(private AsistenciaService $asistenciaService)
     {
         //
      }

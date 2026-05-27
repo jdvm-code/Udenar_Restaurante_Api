@@ -1,9 +1,9 @@
 <?php
-namespace App\Repository;
+namespace App\Http\Repository;
 
 use App\Http\Repository\BaseRepository;
+use App\Http\Services\EstadoAsistenciaService;
 use App\Models\EstadoAsistencia;
-use App\Services\EstadoAsistenciaService;
 
 class EstadoAsistenciaRepository extends BaseRepository implements EstadoAsistenciaService
 {

@@ -1,17 +1,12 @@
 <?php
 namespace App\Http\Repository;
 
-
-use App\Http\Services\UserServices;
-use App\Mail\ConfirmAccount;
+use App\Http\Services\UserService;
 use App\Models\User;
-use Hash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash as FacadesHash;
-use Mail;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
 
-class UserRepository extends BaseRepository implements UserServices
+class UserRepository extends BaseRepository implements UserService
 {
     public function __construct(private User $model)
     {
@@ -25,7 +20,7 @@ class UserRepository extends BaseRepository implements UserServices
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => FacadesHash::make($request->password),
+                'password' => Hash::make($request->password),
                 'remeber_token'=> $token,
                 'role_id'=>$request->role_id
             ]);

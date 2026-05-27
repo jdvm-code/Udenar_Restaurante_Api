@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Repository;
 
-use App\Http\Services\PermisoServices;
+use App\Http\Services\PermisoService;
 use App\Models\Permiso;
 
-class PermisoRepository extends BaseRepository implements PermisoServices {
+class PermisoRepository extends BaseRepository implements PermisoService {
 
     public function __construct(private Permiso $model)
     {

@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Services\PermisoServices;
+use App\Http\Services\PermisoService;
 use Illuminate\Http\Request;
 
 class PermisoController extends Controller
 {
-    public function __construct(private PermisoServices $permisoServices)
+    public function __construct(private PermisoService $permisoServices)
     {
 
     } 

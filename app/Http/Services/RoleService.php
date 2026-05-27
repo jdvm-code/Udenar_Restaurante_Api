@@ -2,7 +2,7 @@
 namespace App\Http\Services;
 use Illuminate\Http\Request;
 
-interface RoleServices {
+interface RoleService {
 
     public function index(Request $request);
     public function show(int $id);

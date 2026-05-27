@@ -3,7 +3,7 @@ namespace App\Http\Services;
 
 use Illuminate\Http\Request;
 
-interface PermisoServices {
+interface PermisoService {
 
     public function index(Request $request);
     public function show(int $id);
