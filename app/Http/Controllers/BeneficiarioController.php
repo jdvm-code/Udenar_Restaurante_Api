@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\BeneficiarioServices;
 use App\Models\Beneficiario;
 use Illuminate\Http\Request;
 
 class BeneficiarioController extends Controller
 {
+    public function __construct(private BeneficiarioServices $beneficiarioServices)
+    {
+        //
+     }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return $this->beneficiarioServices->index($request);
     }
 
     /**
@@ -20,30 +25,30 @@ class BeneficiarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->beneficiarioServices->store($request);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Beneficiario $beneficiario)
+    public function show(string $id)
     {
-        //
+        return $this->beneficiarioServices->show($id);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Beneficiario $beneficiario)
+    public function update(Request $request, string $id)
     {
-        //
+        return $this->beneficiarioServices->update($request, $id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Beneficiario $beneficiario)
+    public function destroy(string $id)
     {
-        //
+        return $this->beneficiarioServices->delete($id);
     }
 }
