@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Services;
+namespace App\Http\Repository;
 
-use App\Http\Repository\BaseRepository;
+use App\Http\Services\BeneficiarioServices;
 use App\Models\Beneficiario;
 
 class BeneficiarioRepository extends BaseRepository implements BeneficiarioServices {

@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\RoleServices;
+use App\Http\Services\AsistenciaServices;
+use App\Models\Asistencia;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class AsistenciaController extends Controller
 {
-    public function __construct(private RoleServices $roleServices)
+    public function __construct(private AsistenciaServices $asistenciaService)
     {
-
-    }
+        //
+     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return $this->roleServices->index($request);
+        return $this->asistenciaService->index($request);
     }
 
     /**
@@ -24,7 +25,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->roleServices->store($request);
+        return $this->asistenciaService->store($request);
     }
 
     /**
@@ -32,7 +33,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        return $this->roleServices->show($id);
+        return $this->asistenciaService->show($id);
     }
 
     /**
@@ -40,7 +41,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return $this->roleServices->update($request, $id);
+        return $this->asistenciaService->update($request, $id);
     }
 
     /**
@@ -48,6 +49,6 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->roleServices->delete($id);
+        return $this->asistenciaService->delete($id);
     }
 }

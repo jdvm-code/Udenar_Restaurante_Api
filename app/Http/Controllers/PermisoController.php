@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\RoleServices;
+use App\Http\Services\PermisoServices;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class PermisoController extends Controller
 {
-    public function __construct(private RoleServices $roleServices)
+    public function __construct(private PermisoServices $permisoServices)
     {
 
-    }
+    } 
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return $this->roleServices->index($request);
+        return $this->permisoServices->index($request);
     }
 
     /**
@@ -24,7 +24,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->roleServices->store($request);
+        return $this->permisoServices->store($request);
     }
 
     /**
@@ -32,7 +32,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        return $this->roleServices->show($id);
+        return $this->permisoServices->show($id);
     }
 
     /**
@@ -40,7 +40,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return $this->roleServices->update($request, $id);
+        return $this->permisoServices->update($request, $id);
     }
 
     /**
@@ -48,6 +48,6 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->roleServices->delete($id);
+        return $this->permisoServices->delete($id);
     }
 }

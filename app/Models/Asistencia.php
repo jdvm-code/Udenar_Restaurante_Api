@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['fecha_inicio', 'fecha_fin', 'status', 'user_id'])]
-#[Table('beneficiarios')]
+#[Fillable(['user_id','comidas_id', 'fecha_asistencia', 'fecha_registro','codigo', 'estadosAsistencia_id'])]
+#[Table('asistencias')]
 
-
-class Beneficiario extends Model
+class Asistencia extends Model
 {
     //
 }
