@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Services\UserService;
+use App\Http\Services\UserServices;
 use App\Mail\ConfirmAccount;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class AuthController extends Controller
 {
 
-    public function __construct(private UserService $userService)
+    public function __construct(private UserServices $userService)
     {
         
     }

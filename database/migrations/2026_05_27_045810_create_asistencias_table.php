@@ -18,14 +18,16 @@ return new class extends Migration
             $table->date('fecha_asistencia');
             $table->date('fecha_registro');
             $table->string('codigo');
-            $table->unsignedBigInteger('estadosAsistencia_id');
 
+            // 1. Cambialo a snake_case puro (todo minúsculas)
+            $table->unsignedBigInteger('estado_asistencia_id');
 
-
-            
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('comidas_id')->references('id')->on('comidas')->onDelete('cascade');
-            $table->foreign('estadosAsistencia_id')->references('id')->on('estados_asistencia')->onDelete('cascade');
+
+            // 2. Apunta a la tabla correcta 'estados_asistencias' (singular, que es la que tienes en phpMyAdmin)
+            $table->foreign('estado_asistencia_id')->references('id')->on('estados_asistencias')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

@@ -15,7 +15,4 @@ class Comida extends Model
     //
 }
 
-
-
-
 ?>

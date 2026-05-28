@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['name'])]
-#[Table('estado_asistencias')]
+#[Table('estados_asistencias')]
 
 
 class EstadoAsistencia extends Model
