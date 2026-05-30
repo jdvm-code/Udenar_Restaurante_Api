@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Services\UserService;
@@ -10,10 +11,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class AuthController extends Controller
 {
 
-    public function __construct(private UserService $userService)
-    {
-        
-    }
+    public function __construct(private UserService $userService) {}
     public function register(Request $request)
     {
         try {
@@ -82,8 +80,21 @@ class AuthController extends Controller
             ], 401);
         }
     }
-    public function index(){
-        $users =User::with('role')->get();
+
+    public function logout(Request $request)
+    {
+        // Invalida el token actual
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sesión cerrada correctamente'
+        ]);
+    }
+
+    public function index()
+    {
+        $users = User::with('role')->get();
         return response()->json($users);
     }
 }

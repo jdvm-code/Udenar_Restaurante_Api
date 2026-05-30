@@ -1,14 +1,16 @@
 <?php
+
 namespace App\Http\Repository;
 
 use App\Models\Reserva;
-use App\Models\Beca; 
+use App\Models\Beca;
 use App\Http\Services\ReporteService;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class ReporteRepository extends BaseRepository implements ReporteService{
-    
+class ReporteRepository extends BaseRepository implements ReporteService
+{
+
     public function __construct(private Reserva $model)
     {
         parent::__construct($model);
@@ -26,7 +28,7 @@ class ReporteRepository extends BaseRepository implements ReporteService{
             $query->whereBetween('updated_at', [$fechaInicio, $fechaFin]);
         }
 
-        return $query->with('usuario')->get(); 
+        return $query->with('usuario')->get();
     }
 
     /**
@@ -36,16 +38,16 @@ class ReporteRepository extends BaseRepository implements ReporteService{
     public function traficoRestaurante($fechaInicio, $fechaFin)
     {
         return Reserva::select(
-                    'fecha_reserva',
-                    'comidas_id',
-                    'horarios_id',
-                    DB::raw('COUNT(*) as total_atendidos')
-                )
-                ->where('estados_reservas_id', 2) // 2 = Consumido / Reclamado
-                ->whereBetween('fecha_reserva', [$fechaInicio, $fechaFin])
-                ->groupBy('fecha_reserva', 'comidas_id', 'horarios_id')
-                ->orderBy('fecha_reserva', 'desc')
-                ->get();
+            'fecha_reserva',
+            'comidas_id',
+            'horarios_id',
+            DB::raw('COUNT(*) as total_atendidos')
+        )
+            ->where('estados_reservas_id', 2) // 2 = Consumido / Reclamado
+            ->whereBetween('fecha_reserva', [$fechaInicio, $fechaFin])
+            ->groupBy('fecha_reserva', 'comidas_id', 'horarios_id')
+            ->orderBy('fecha_reserva', 'desc')
+            ->get();
     }
 
     /**
@@ -57,14 +59,24 @@ class ReporteRepository extends BaseRepository implements ReporteService{
         $hoy = Carbon::now('America/Bogota')->format('Y-m-d');
 
         return Reserva::select('becas_id', DB::raw('COUNT(*) as total_inasistencias'))
-                // Consideramos inasistencia si la fecha ya pasó y nunca se reclamó (sigue en estado 1)
-                ->where('estados_reservas_id', 1) 
-                ->where('fecha_reserva', '<', $hoy)
-                ->whereBetween('fecha_reserva', [$fechaInicio, $fechaFin])
-                ->groupBy('becas_id')
-                ->having('total_inasistencias', '>=', $minInasistencias)
-                ->orderBy('total_inasistencias', 'desc')
-                ->with('becas') // Carga la relación para saber quién es
-                ->get();
+            // Consideramos inasistencia si la fecha ya pasó y nunca se reclamó (sigue en estado 1)
+            ->where('estados_reservas_id', 1)
+            ->where('fecha_reserva', '<', $hoy)
+            ->whereBetween('fecha_reserva', [$fechaInicio, $fechaFin])
+            ->groupBy('becas_id')
+            ->having('total_inasistencias', '>=', $minInasistencias)
+            ->orderBy('total_inasistencias', 'desc')
+            ->with('becas') // Carga la relación para saber quién es
+            ->get();
     }
+
+    public function obtenerFaltasPorBecado(int $becasId)
+    {
+        $hoy = \Carbon\Carbon::now('America/Bogota')->format('Y-m-d');
+
+        return Reserva::where('becas_id', $becasId)
+            ->where('estados_reservas_id', 1) // Estado activa / no reclamada
+            ->where('fecha_reserva', '<', $hoy) // Que la fecha ya haya pasado
+            ->count(); // Cuenta el total de registros que cumplen las condiciones
+    }   
 }

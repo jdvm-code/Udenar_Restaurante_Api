@@ -31,6 +31,8 @@ Route::put('/usuarios/{id}/cambiar-password', [UserController::class, 'cambiarPa
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/me', [AuthController::class, 'me']);
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+
 });
 
 //rutas de reservas
@@ -61,6 +63,9 @@ Route::get('/beneficios-perdidos', [ReporteController::class, 'estudiantesInacti
     // 4. Reportes Extra sugeridos
     Route::get('/balance-comidas', [ReporteController::class, 'balanceComidas']);
     Route::get('/eficiencia-reservas', [ReporteController::class, 'eficienciaReservas']);
+
+
+    Route::get('/becados/{id}/faltas', [ReporteController::class, 'faltasBecado']);
 
 
 
