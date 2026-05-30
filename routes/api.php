@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BecaController;
 use App\Http\Controllers\ComidaController;
@@ -40,6 +39,8 @@ Route::apiResource('estado-reserva', EstadoReservaController::class);
 Route::apiResource('estado-beca', EstadoBecaController::class);
 Route::apiResource('horario', HorarioController::class);
 Route::apiResource('becas', BecaController::class);
+
+Route::post('/roles/asignar-permiso', [RoleController::class, 'asignarPermiso']);
 
 
 

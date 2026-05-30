@@ -1,15 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Services\RoleService;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function __construct(private RoleService $roleServices)
-    {
-
-    }
+    public function __construct(private RoleService $roleServices) {}
     /**
      * Display a listing of the resource.
      */
@@ -48,5 +47,23 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         return $this->roleServices->delete($id);
+    }
+
+    public function asignarPermiso(Request $request)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permisos_id' => 'required|exists:permisos,id',
+        ]);
+
+        $role = Role::findOrFail($request->role_id);
+
+        // attach() inserta directamente en la tabla rolesypermisos
+        // usando syncWithoutDetaching() evitas que se duplique si repites la petición
+        $role->permisos()->syncWithoutDetaching([$request->permisos_id]);
+
+        return response()->json([
+            'message' => 'Permiso asignado al rol con éxito.'
+        ], 200);
     }
 }

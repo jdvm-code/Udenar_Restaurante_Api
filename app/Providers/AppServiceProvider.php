@@ -2,20 +2,33 @@
 
 namespace App\Providers;
 
-use App\Http\Repository\AsistenciaRepository;
-use App\Http\Repository\BeneficiarioRepository;
-use App\Http\Repository\ComidaRepository;
-use App\Http\Repository\PermisoRepository;
-use App\Http\Repository\UserRepository;
-use App\Http\Services\BeneficiarioService;
+use App\Http\Services\BecaService;
+use App\Http\Repository\BecaRepository;
+
 use App\Http\Services\ComidaService;
-use App\Http\Services\EstadoAsistenciaService;
+use App\Http\Repository\ComidaRepository;
+
+use App\Http\Repository\PermisoRepository;
 use App\Http\Services\PermisoService;
+
 use App\Http\Services\UserService;
-use App\Http\Repository\EstadoAsistenciaRepository;
+use App\Http\Repository\UserRepository;
+
+use App\Http\Services\EstadoBecaService;
+use App\Http\Repository\EstadoBecaRepository;
+
+use App\Http\Services\EstadoReservaService;
+use App\Http\Repository\EstadoReservaRepository;
+
+use App\Http\Services\HorarioService;
+use App\Http\Repository\HorarioRepository;
+
+use App\Http\Services\ReservaService;
+use App\Http\Repository\ReservaRepository;
+
 use App\Http\Repository\RoleRepository;
-use App\Http\Services\AsistenciaService;
 use App\Http\Services\RoleService;
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,8 +50,19 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            BeneficiarioService::class,
-            BeneficiarioRepository::class
+            EstadoBecaService::class,
+            EstadoBecaRepository::class
+        );
+
+        $this->app->bind(
+            EstadoReservaService::class,
+            EstadoReservaRepository::class
+        );
+
+
+        $this->app->bind(
+            BecaService::class,
+            BecaRepository::class
         );
 
         $this->app->bind(
@@ -51,14 +75,15 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            AsistenciaService::class,
-            AsistenciaRepository::class
+            ReservaService::class,
+            ReservaRepository::class
         );
 
         $this->app->bind(
-            EstadoAsistenciaService::class,
-            EstadoAsistenciaRepository::class
+            HorarioService::class,
+            HorarioRepository::class
         );
+
     }
 
     /**

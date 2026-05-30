@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Services;
 use Illuminate\Http\Request;
+
 interface BecaService {
 
     public function index(Request $request);
