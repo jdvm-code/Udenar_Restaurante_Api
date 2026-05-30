@@ -20,13 +20,13 @@ class UserRepository extends BaseRepository implements UserService
     public function store(Request $request)
     {
         try {
-            $token =bin2hex(random_bytes(16));
+            $token = bin2hex(random_bytes(16));
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' =>Hash::make($request->password),
-                'remember_token'=> $token,
-                'role_id'=>$request->role_id
+                'password' => Hash::make($request->password),
+                'remember_token' => $token,
+                'role_id' => $request->role_id
             ]);
             // Generate token
             $token = JWTAuth::fromUser($user);
@@ -38,5 +38,31 @@ class UserRepository extends BaseRepository implements UserService
             throw $e;
         }
     }
+
+    public function cambiarPassword(int $id, string $passwordActual, string $nuevoPassword)
+    {
+        // 1. Buscamos al usuario
+        $usuario = $this->model->find($id);
+
+        if (!$usuario) {
+            throw new \Exception('El usuario no existe.', 404);
+        }
+
+        // 2. Verificamos que la contraseña actual ingresada coincida con la de la BD
+        if (!Hash::check($passwordActual, $usuario->password)) {
+            throw new \Exception('La contraseña actual es incorrecta.', 403);
+        }
+
+        // 3. Verificamos que la nueva contraseña no sea igual a la vieja (opcional, pero buena práctica)
+        if (Hash::check($nuevoPassword, $usuario->password)) {
+            throw new \Exception('La nueva contraseña no puede ser igual a la anterior.', 400);
+        }
+
+        // 4. Actualizamos la contraseña encriptándola
+        $usuario->update([
+            'password' => Hash::make($nuevoPassword)
+        ]);
+
+        return true;
+    }
 }
-    

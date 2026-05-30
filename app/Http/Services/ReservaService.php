@@ -10,4 +10,6 @@ interface ReservaService {
     public function update(Request $request, int $id);
     public function delete(int $id);
 
+    public function verificarQR(string $codigo);
+
 }

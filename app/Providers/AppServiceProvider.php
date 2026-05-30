@@ -22,13 +22,13 @@ use App\Http\Repository\EstadoReservaRepository;
 
 use App\Http\Services\HorarioService;
 use App\Http\Repository\HorarioRepository;
-
+use App\Http\Repository\ReporteRepository;
 use App\Http\Services\ReservaService;
 use App\Http\Repository\ReservaRepository;
 
 use App\Http\Repository\RoleRepository;
+use App\Http\Services\ReporteService;
 use App\Http\Services\RoleService;
-
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -82,6 +82,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             HorarioService::class,
             HorarioRepository::class
+        );
+
+        $this->app->bind(
+            ReporteService::class,
+            ReporteRepository::class
         );
 
     }
