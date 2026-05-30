@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('becas', function (Blueprint $table) {
             $table->id();
+            // Apesta a la convención singular 'users_id', mapeamos explícitamente a la tabla 'users'
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
-            $table->string('status');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('estados_becas_id')->constrained('estados_becas')->onDelete('restrict')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -3,11 +3,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\AsistenciaService;
+use App\Http\Services\ReservaService;
 use Illuminate\Http\Request;
 
-class AsistenciaController extends Controller
+class ReservaController extends Controller
 {
-    public function __construct(private AsistenciaService $asistenciaService)
+    public function __construct(private ReservaService $reservaService)
     {
         //
      }
@@ -16,7 +17,7 @@ class AsistenciaController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->asistenciaService->index($request);
+        return $this->reservaService->index($request);
     }
 
     /**
@@ -24,7 +25,7 @@ class AsistenciaController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->asistenciaService->store($request);
+        return $this->reservaService->store($request);
     }
 
     /**
@@ -32,7 +33,7 @@ class AsistenciaController extends Controller
      */
     public function show(string $id)
     {
-        return $this->asistenciaService->show($id);
+        return $this->reservaService->show($id);
     }
 
     /**
@@ -40,7 +41,7 @@ class AsistenciaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return $this->asistenciaService->update($request, $id);
+        return $this->reservaService->update($request, $id);
     }
 
     /**
@@ -48,6 +49,6 @@ class AsistenciaController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->asistenciaService->delete($id);
+        return $this->reservaService->delete($id);
     }
 }

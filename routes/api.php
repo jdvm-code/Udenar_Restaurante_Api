@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BecaController;
 use App\Http\Controllers\ComidaController;
-use App\Http\Controllers\EstadoAsistenciaController;
+use App\Http\Controllers\EstadoBecaController;
+use App\Http\Controllers\EstadoReservaController;
+use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\PermisoController;
+use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,10 +33,16 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 //rutas de recursos
 Route::apiResource('comida', ComidaController::class);
-Route::apiResource('asistencia', AsistenciaController::class);
+Route::apiResource('reserva', ReservaController::class);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('permisos', PermisoController::class);
-Route::apiResource('estado-asistencia', EstadoAsistenciaController::class);
+Route::apiResource('estado-reserva', EstadoReservaController::class);
+Route::apiResource('estado-beca', EstadoBecaController::class);
+Route::apiResource('horario', HorarioController::class);
+Route::apiResource('becas', BecaController::class);
+
+
+
 
 
 

@@ -1,22 +1,21 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Services\EstadoAsistenciaService;
 use Illuminate\Http\Request;
+use App\Http\Services\HorarioService;
 
-class EstadoAsistenciaController extends Controller
+class HorarioController extends Controller
 {
-
-    public function __construct(private EstadoAsistenciaService $estadoAsistencia)
+    public function __construct(private HorarioService $horarioService)
     {
-
-    }
+        //
+     }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return $this->estadoAsistencia->index($request);
+        return $this->horarioService->index($request);
     }
 
     /**
@@ -24,7 +23,7 @@ class EstadoAsistenciaController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->estadoAsistencia->store($request);
+        return $this->horarioService->store($request);
     }
 
     /**
@@ -32,7 +31,7 @@ class EstadoAsistenciaController extends Controller
      */
     public function show(string $id)
     {
-        return $this->estadoAsistencia->show($id);
+        return $this->horarioService->show($id);
     }
 
     /**
@@ -40,14 +39,14 @@ class EstadoAsistenciaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return $this->estadoAsistencia->update($request, $id);
+        return $this->horarioService->update($request, $id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
-        return $this->estadoAsistencia->delete($id);
+        return $this->horarioService->delete($id);
     }
 }

@@ -1,8 +1,7 @@
 <?php
 namespace App\Http\Services;
 use Illuminate\Http\Request;
-
-interface AsistenciaService {
+interface BecaService {
 
     public function index(Request $request);
     public function show(int $id);

@@ -1,13 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Services\BeneficiarioService;
-use App\Models\Beneficiario;
+use App\Http\Services\BecaService;
 use Illuminate\Http\Request;
 
-class BeneficiarioController extends Controller
+class BecaController extends Controller
 {
-    public function __construct(private BeneficiarioService $beneficiarioServices)
+    public function __construct(private BecaService $becaServices)
     {
         //
      }
@@ -16,7 +15,7 @@ class BeneficiarioController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->beneficiarioServices->index($request);
+        return $this->becaServices->index($request);
     }
 
     /**
@@ -24,7 +23,7 @@ class BeneficiarioController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->beneficiarioServices->store($request);
+        return $this->becaServices->store($request);
     }
 
     /**
@@ -32,7 +31,7 @@ class BeneficiarioController extends Controller
      */
     public function show(string $id)
     {
-        return $this->beneficiarioServices->show($id);
+        return $this->becaServices->show($id);
     }
 
     /**
@@ -40,7 +39,7 @@ class BeneficiarioController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return $this->beneficiarioServices->update($request, $id);
+        return $this->becaServices->update($request, $id);
     }
 
     /**
@@ -48,6 +47,6 @@ class BeneficiarioController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->beneficiarioServices->delete($id);
+        return $this->becaServices->delete($id);
     }
 }

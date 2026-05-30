@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comidas', function (Blueprint $table) {
             $table->id();
-            $table->string('tipo')->unique();
+            $table->string('tipo', 30)->unique();
             $table->timestamps();
         });
     }
