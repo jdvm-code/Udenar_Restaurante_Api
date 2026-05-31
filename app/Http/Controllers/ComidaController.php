@@ -21,7 +21,20 @@ class ComidaController extends Controller
      */
     public function store(Request $request)
     {
-    return $this->comidaService->store($request);
+        try{
+                $comida = $this->comidaService->store($request);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Comida creada con éxito',
+                    'comida' => $comida
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al crear la comida',
+                    'error' => $e->getMessage()
+                ], 500);
+        }
 
     }
 
