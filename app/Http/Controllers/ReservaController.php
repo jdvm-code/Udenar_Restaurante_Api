@@ -39,7 +39,7 @@ class ReservaController extends Controller
             $nuevaReserva = $this->reservaService->store($request);
 
             return response()->json([
-                'status' => 'success',
+                'success' => true,
                 'message' => 'Reserva creada exitosamente.',
                 'data' => $nuevaReserva
             ], 201);
@@ -48,7 +48,7 @@ class ReservaController extends Controller
             $statusCode = $e->getCode() ?: 400;
 
             return response()->json([
-                'status' => 'error',
+                'success' => false,
                 'message' => $e->getMessage()
             ], $statusCode);
         }
@@ -71,7 +71,7 @@ class ReservaController extends Controller
             $reservaActualizada = $this->reservaService->update($request, (int)$id);
             
             return response()->json([
-                'status' => 'success',
+                'success' => true,
                 'message' => 'Reserva actualizada correctamente.',
                 'data' => $reservaActualizada
             ], 200);
@@ -79,7 +79,7 @@ class ReservaController extends Controller
         } catch (\Exception $e) {
             $statusCode = $e->getCode() ?: 400;
             return response()->json([
-                'status' => 'error',
+                'success' => false,
                 'message' => $e->getMessage()
             ], $statusCode);
         }
@@ -108,7 +108,7 @@ class ReservaController extends Controller
             $reserva = $this->reservaService->verificarQR($request->codigo);
             
             return response()->json([
-                'status' => 'success',
+                'success' => true,
                 'message' => 'Reserva verificada con éxito. ¡Buen provecho!',
                 'data' => $reserva
             ], 200);
@@ -118,7 +118,7 @@ class ReservaController extends Controller
             $statusCode = $e->getCode() ?: 400;
             
             return response()->json([
-                'status' => 'error',
+                'success' => false,
                 'message' => $e->getMessage()
             ], $statusCode);
         }

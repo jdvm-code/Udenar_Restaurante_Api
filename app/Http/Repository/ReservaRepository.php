@@ -29,24 +29,7 @@ class ReservaRepository extends BaseRepository implements ReservaService {
             throw $e;
         }
     }
-
-    /**
-     * Busca una reserva por su código único de QR.
-     */
-    public function buscarPorCodigo(string $codigo): ?Reserva
-    {
-        return Reserva::where('codigo', $codigo)->first();
-    }
-
-    /**
-     * Opcional: Método para actualizar el estado si se consume la reserva
-     */
-    public function actualizarEstado(Reserva $reserva, int $nuevoEstadoId): bool
-    {
-        return $reserva->update(['estados_reservas_id' => $nuevoEstadoId]);
-    }
-
-    /**
+       /**
      * Implementación del método verificarQR definido en la interfaz ReservaService.
       * Este método valida el código QR, verifica la fecha de la reserva y su estado.
       * Lanza excepciones con mensajes claros para cada caso de error.

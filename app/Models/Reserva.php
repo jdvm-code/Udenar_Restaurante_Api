@@ -16,7 +16,6 @@ class Reserva extends Model
     {
         parent::boot();
 
-        // Se ejecuta automáticamente justo antes de crear el registro
         static::creating(function ($reserva) {
             $reserva->codigo = (string) Str::uuid();
         });

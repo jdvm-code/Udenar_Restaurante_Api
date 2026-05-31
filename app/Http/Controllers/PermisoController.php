@@ -23,7 +23,20 @@ class PermisoController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->permisoServices->store($request);
+        try {
+            $permiso = $this->permisoServices->store($request);
+            return response()->json([
+                'success' => true,
+                'message' => 'Permiso creado con éxito',
+                'permiso' => $permiso
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el permiso',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

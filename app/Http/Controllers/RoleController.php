@@ -22,7 +22,21 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->roleServices->store($request);
+
+        try {
+            $role = $this->roleServices->store($request);
+            return response()->json([
+                'success' => true,
+                'message' => 'Rol creado con éxito',
+                'role' => $role
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el rol',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
