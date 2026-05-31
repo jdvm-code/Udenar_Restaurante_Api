@@ -58,7 +58,7 @@ class HorarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(string $id)
+    public function destroy(string $id)
     {
         return $this->horarioService->delete($id);
     }
