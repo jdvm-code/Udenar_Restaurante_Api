@@ -23,20 +23,7 @@ class HorarioController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-                $horario = $this->horarioService->store($request);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Horario creado con éxito',
-                    'horario' => $horario
-                ], 200);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al crear el horario',
-                    'error' => $e->getMessage()
-                ], 500);
-        }
+        return $this->horarioService->store($request);
     }
 
     /**

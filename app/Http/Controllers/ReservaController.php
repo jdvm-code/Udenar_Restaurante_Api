@@ -59,7 +59,21 @@ class ReservaController extends Controller
      */
     public function show(string $id)
     {
-        return $this->reservaService->show($id);
+        try{
+            $reserva = $this->reservaService->show($id);
+            return response()->json([
+                'status' => "success",
+                'message' => 'Reserva encontrada.',
+                'data' => $reserva
+            ], 200);
+        } catch (\Exception $e) {
+            $statusCode = $e->getCode() ?: 400;
+            return response()->json([
+                'status' => "error",
+                
+                'message' => $e->getMessage()
+            ], $statusCode);
+        }
     }
 
     /**

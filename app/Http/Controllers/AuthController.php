@@ -48,7 +48,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Login successful',
                 'token' => $token,
-                'user' => auth('api')->user(), // Mejor que $request->user()
+                'user' => $request->user(), // Mejor que $request->user()
             ], 200);
         } catch (JWTException $e) {
             return response()->json([

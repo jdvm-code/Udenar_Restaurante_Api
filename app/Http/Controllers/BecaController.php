@@ -23,20 +23,7 @@ class BecaController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-                $beca = $this->becaServices->store($request);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Beca creada con éxito',
-                    'beca' => $beca
-                ], 200);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al crear la beca',
-                    'error' => $e->getMessage()
-                ], 500);
-        }
+        return $this->becaServices->store($request);
     }
 
     /**

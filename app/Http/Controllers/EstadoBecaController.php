@@ -23,20 +23,7 @@ class EstadoBecaController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-                $estadoBeca = $this->estadoBecaService->store($request);
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Estado de beca creado con éxito',
-                    'estadoBeca' => $estadoBeca
-                ], 200);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al crear el estado de beca',
-                    'error' => $e->getMessage()
-                ], 500);
-        }
+        return $this->estadoBecaService->store($request);
     }
 
     /**
