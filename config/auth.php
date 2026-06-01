@@ -4,6 +4,7 @@ use App\Models\User;
 
 return [
 
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -40,6 +41,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],

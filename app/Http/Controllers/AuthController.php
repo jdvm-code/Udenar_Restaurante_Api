@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\UserService;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -13,12 +12,13 @@ class AuthController extends Controller
 {
 
     public function __construct(private UserService $userService) {}
+
     public function register(Request $request)
     {
         try {
-            $user =  $this->userService->store($request);
+            $user = $this->userService->store($request);
             $token = JWTAuth::fromUser($user);
-            // Mail::to($user->email)->send(new ConfirmAccount($user));
+
             return response()->json([
                 'success' => true,
                 'message' => 'User registered successfully',
@@ -28,7 +28,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Registration failed zz',
+                'message' => 'Registration failed',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -48,7 +48,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Login successful',
                 'token' => $token,
-                'user' => $request->user(),
+                'user' => auth('api')->user(), // Mejor que $request->user()
             ], 200);
         } catch (JWTException $e) {
             return response()->json([
@@ -82,20 +82,27 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        // Invalida el token actual
-        $request->user()->token()->revoke();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Sesión cerrada correctamente'
-        ]);
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Sesión cerrada correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to logout',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-/*     public function index()
+    public function index()
     {
         $users = User::with('role')->get();
         return response()->json($users);
     }
- */}
+}
