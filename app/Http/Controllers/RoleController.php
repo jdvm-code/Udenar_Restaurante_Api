@@ -46,7 +46,19 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->roleServices->delete($id);
+        try {
+            $this->roleServices->delete($id);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Rol eliminado correctamente.'
+            ], 200);
+        } catch (\Exception $e) {
+            $statusCode = $e->getCode() ?: 400;
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], $statusCode);
+        }
     }
 
     public function asignarPermiso(Request $request)
@@ -57,11 +69,7 @@ class RoleController extends Controller
         ]);
 
         $role = Role::findOrFail($request->role_id);
-
-        // attach() inserta directamente en la tabla rolesypermisos
-        // usando syncWithoutDetaching() evitas que se duplique si repites la petición
         $role->permisos()->syncWithoutDetaching([$request->permisos_id]);
-
         return response()->json([
             'message' => 'Permiso asignado al rol con éxito.'
         ], 200);

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\BecaService;
+use App\Models\Beca;
 use Illuminate\Http\Request;
 
 class BecaController extends Controller
@@ -48,5 +49,10 @@ class BecaController extends Controller
     public function destroy(string $id)
     {
         return $this->becaServices->delete($id);
+    }
+
+    public function getByUserId($userId)
+    {
+        return $this->becaServices->getByUserId($userId);
     }
 }

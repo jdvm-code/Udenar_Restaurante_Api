@@ -72,14 +72,15 @@ Route::middleware('auth:api')->group(function () {
     Route::get('estado-beca/{id}', [EstadoBecaController::class, 'show']);
     Route::put('estado-beca/{id}', [EstadoBecaController::class, 'update']);
     Route::delete('estado-beca/{id}', [EstadoBecaController::class, 'destroy']);
+    Route::get('/becas/usuario/{userId}', [BecaController::class, 'getByUserId']);
 
     // --- RESERVAS ---
     Route::get('reserva', [ReservaController::class, 'index']);
     Route::post('reserva', [ReservaController::class, 'store']);
     Route::get('reserva/{id}', [ReservaController::class, 'show']);
     Route::put('reserva/{id}', [ReservaController::class, 'update']); // Para cancelar
-    Route::delete('reserva/{id}', [ReservaController::class, 'destroy']);
     Route::post('reservas/verificar-qr', [ReservaController::class, 'verificarQR']);
+    Route::get('/reservas/codigo-del-dia/{id}', [ReservaController::class, 'buscarCodigoReservasDelDiayComida']);
 
     // --- ESTADOS RESERVA ---
     Route::get('estado-reserva', [EstadoReservaController::class, 'index']);

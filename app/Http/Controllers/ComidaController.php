@@ -46,6 +46,10 @@ class ComidaController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->comidaService->delete($id);
+        try {
+            return $this->comidaService->delete($id);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar la comida: ' . $e->getMessage()], 500);
+        }
     }
 }

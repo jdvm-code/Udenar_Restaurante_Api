@@ -46,7 +46,19 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->userServices->delete($id);
+        try {
+            $this->userServices->delete($id);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Usuario eliminado correctamente.'
+            ], 200);
+        } catch (\Exception $e) {
+            $statusCode = $e->getCode() ?: 400;
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], $statusCode);
+        }
     }
 
     /**

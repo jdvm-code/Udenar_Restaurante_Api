@@ -11,5 +11,6 @@ interface ReservaService {
     public function delete(int $id);
 
     public function verificarQR(string $codigo);
+    public function buscarCodigoReservasDelDiayComida(int $id);
 
 }

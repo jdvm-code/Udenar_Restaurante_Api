@@ -87,5 +87,34 @@ class ReservaRepository extends BaseRepository implements ReservaService {
 
         return $reserva;
     }
+
+    //buscar la el codigo QR del dia para un usuario y para cada comida
+    public function buscarCodigoReservasDelDiayComida(int $id){
+        $hoy = Carbon::now('America/Bogota')->format('Y-m-d');
+
+        $reservas = $this->model
+            ->where('becas_id', $id)
+            ->whereDate('fecha_reserva', $hoy)
+            ->get(['comidas_id', 'codigo']);
+
+        return $reservas;
+    }//que hace este metodo? busca las reservas del dia para un usuario y para cada comida, devuelve el codigo QR de cada reserva
+    //haz un ejemplo de la respuesta de este metodo: [
+    //  {
+    //    "comidas_id": 1,
+    //    "codigo": "abc123"
+    //  },
+    //  {
+    //    "comidas_id": 2,
+    //    "codigo": "def456"
+    //  }
+    //]
+    //como es el json que debo enviar para consumir este metodo? 
+    //No es necesario enviar un JSON, solo debes hacer una petición GET a la ruta correspondiente 
+    //con el ID del usuario, por ejemplo: GET /api/reservas/codigo-del-dia/1
+    //que rutas debo crear para consumir este metodo? Debes crear una ruta GET en tu archivo de rutas, 
+    //por ejemplo: Route::get('/reservas/codigo-del-dia/{id}', [ReservaController::class, 'buscarCodigoReservasDelDiayComida']);/
+     
+
     
 }
