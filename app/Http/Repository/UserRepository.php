@@ -41,24 +41,20 @@ class UserRepository extends BaseRepository implements UserService
 
     public function cambiarPassword(int $id, string $passwordActual, string $nuevoPassword)
     {
-        // 1. Buscamos al usuario
         $usuario = $this->model->find($id);
 
         if (!$usuario) {
             throw new \Exception('El usuario no existe.', 404);
         }
 
-        // 2. Verificamos que la contraseña actual ingresada coincida con la de la BD
         if (!Hash::check($passwordActual, $usuario->password)) {
             throw new \Exception('La contraseña actual es incorrecta.', 403);
         }
 
-        // 3. Verificamos que la nueva contraseña no sea igual a la vieja (opcional, pero buena práctica)
         if (Hash::check($nuevoPassword, $usuario->password)) {
             throw new \Exception('La nueva contraseña no puede ser igual a la anterior.', 400);
         }
 
-        // 4. Actualizamos la contraseña encriptándola
         $usuario->update([
             'password' => Hash::make($nuevoPassword)
         ]);

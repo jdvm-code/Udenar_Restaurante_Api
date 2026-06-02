@@ -19,6 +19,10 @@ use App\Http\Controllers\ReporteController;
 // ============================================
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('roles', [RoleController::class, 'store']);
+    Route::get('roles', [RoleController::class, 'index']);
+
+
 
 // ============================================
 // RUTAS PROTEGIDAS (Requieren Bearer Token)
@@ -38,8 +42,6 @@ Route::middleware('auth:api')->group(function () {
     Route::put('usuarios/{id}/cambiar-password', [UserController::class, 'cambiarPassword']);
 
     // --- ROLES ---
-    Route::get('roles', [RoleController::class, 'index']);
-    Route::post('roles', [RoleController::class, 'store']);
     Route::get('roles/{id}', [RoleController::class, 'show']);
     Route::put('roles/{id}', [RoleController::class, 'update']);
     Route::delete('roles/{id}', [RoleController::class, 'destroy']);
