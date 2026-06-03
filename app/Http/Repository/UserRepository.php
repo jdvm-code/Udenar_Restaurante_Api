@@ -61,4 +61,25 @@ class UserRepository extends BaseRepository implements UserService
 
         return true;
     }
+
+    public function countAdmin()
+    {
+        try {
+            $count = User::where('role_id', 1)->count();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Conteo de administradores',
+                'data' => ['count' => $count],
+                'error' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al contar',
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

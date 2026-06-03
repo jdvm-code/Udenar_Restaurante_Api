@@ -19,9 +19,34 @@ use App\Http\Controllers\ReporteController;
 // ============================================
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
-Route::post('roles', [RoleController::class, 'store']);
-    Route::get('roles', [RoleController::class, 'index']);
+//Route::post('roles', [RoleController::class, 'store']);
+//Route::get('roles', [RoleController::class, 'index']);
 
+Route::apiResource('comida', ComidaController::class);
+Route::apiResource('permisos', PermisoController::class);
+Route::apiResource('roles', RoleController::class);
+Route::apiresource('horario', HorarioController::class);
+
+Route::get('becas/usuario/{usuarioId}/activa', [BecaController::class, 'getBecaActivaByUsuario']);
+Route::post('becas/solicitar', [BecaController::class, 'solicitar']);
+Route::put('becas/{id}/activar', [BecaController::class, 'activar']);
+Route::get('reservas/usuario/{usuarioId}/fecha/{fecha}', [ReservaController::class, 'getByUsuarioYFecha']);
+
+//Reportes Reservas
+
+Route::apiResource('reservas', ReservaController::class);
+
+// Filtros ya incluidos en index() via Query Params
+// /api/reservas?fecha=2026-06-03&estado=1&comida=1
+
+// Acciones admin
+Route::put('reservas/{id}/confirmar', [ReservaController::class, 'confirmar']);
+Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
+
+Route::get('becas', [BecaController::class, 'index']);
+
+Route::post('reservas/asistencia', [ReservaController::class, 'marcarAsistencia']);
+Route::get('usuarios/count-admin', [UserController::class, 'countAdmin']);
 
 
 // ============================================
@@ -42,24 +67,24 @@ Route::middleware('auth:api')->group(function () {
     Route::put('usuarios/{id}/cambiar-password', [UserController::class, 'cambiarPassword']);
 
     // --- ROLES ---
-    Route::get('roles/{id}', [RoleController::class, 'show']);
+    /*  Route::get('roles/{id}', [RoleController::class, 'show']);
     Route::put('roles/{id}', [RoleController::class, 'update']);
     Route::delete('roles/{id}', [RoleController::class, 'destroy']);
-    Route::post('roles/asignar-permiso', [RoleController::class, 'asignarPermiso']);
+    Route::post('roles/asignar-permiso', [RoleController::class, 'asignarPermiso']); */
 
     // --- PERMISOS ---
-    Route::get('permisos', [PermisoController::class, 'index']);
+    /* Route::get('permisos', [PermisoController::class, 'index']);
     Route::post('permisos', [PermisoController::class, 'store']);
     Route::get('permisos/{id}', [PermisoController::class, 'show']);
     Route::put('permisos/{id}', [PermisoController::class, 'update']);
     Route::delete('permisos/{id}', [PermisoController::class, 'destroy']);
-
+ */
     // --- COMIDAS ---
-    Route::get('comida', [ComidaController::class, 'index']);
+    /* Route::get('comida', [ComidaController::class, 'index']);
     Route::post('comida', [ComidaController::class, 'store']);
     Route::get('comida/{id}', [ComidaController::class, 'show']);
     Route::put('comida/{id}', [ComidaController::class, 'update']);
-    Route::delete('comida/{id}', [ComidaController::class, 'destroy']);
+    Route::delete('comida/{id}', [ComidaController::class, 'destroy']); */
 
     // --- BECAS ---
     Route::get('becas', [BecaController::class, 'index']);
@@ -74,15 +99,13 @@ Route::middleware('auth:api')->group(function () {
     Route::get('estado-beca/{id}', [EstadoBecaController::class, 'show']);
     Route::put('estado-beca/{id}', [EstadoBecaController::class, 'update']);
     Route::delete('estado-beca/{id}', [EstadoBecaController::class, 'destroy']);
-    Route::get('/becas/usuario/{userId}', [BecaController::class, 'getByUserId']);
 
     // --- RESERVAS ---
-    Route::get('reserva', [ReservaController::class, 'index']);
+    /*Route::get('reserva', [ReservaController::class, 'index']);
     Route::post('reserva', [ReservaController::class, 'store']);
     Route::get('reserva/{id}', [ReservaController::class, 'show']);
     Route::put('reserva/{id}', [ReservaController::class, 'update']); // Para cancelar
-    Route::post('reservas/verificar-qr', [ReservaController::class, 'verificarQR']);
-    Route::get('/reservas/codigo-del-dia/{id}', [ReservaController::class, 'buscarCodigoReservasDelDiayComida']);
+    Route::post('reservas/verificar-qr', [ReservaController::class, 'verificarQR']);*/
 
     // --- ESTADOS RESERVA ---
     Route::get('estado-reserva', [EstadoReservaController::class, 'index']);
@@ -92,15 +115,14 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('estado-reserva/{id}', [EstadoReservaController::class, 'destroy']);
 
     // --- HORARIOS ---
-    Route::get('horario', [HorarioController::class, 'index']);
+    /* Route::get('horario', [HorarioController::class, 'index']);
     Route::post('horario', [HorarioController::class, 'store']);
     Route::get('horario/{id}', [HorarioController::class, 'show']);
     Route::put('horario/{id}', [HorarioController::class, 'update']);
     Route::delete('horario/{id}', [HorarioController::class, 'destroy']);
-
+ */
     // --- REPORTES ---
     Route::get('inasistencias', [ReporteController::class, 'estudiantesConInasistencias']);
     Route::get('trafico', [ReporteController::class, 'traficoRestaurante']);
     Route::get('becados/{id}/faltas', [ReporteController::class, 'faltasBecado']);
-
 });

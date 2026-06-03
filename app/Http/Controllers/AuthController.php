@@ -71,7 +71,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'user' => $user->load('role'),
+                'data' => $user->load('role'),
             ], 200);
         } catch (JWTException $e) {
             return response()->json([

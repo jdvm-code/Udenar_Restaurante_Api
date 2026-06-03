@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Http\Services;
+
 use Illuminate\Http\Request;
 
-interface ReservaService {
+interface ReservaService
+{
 
     public function index(Request $request);
     public function show(int $id);
@@ -10,7 +13,10 @@ interface ReservaService {
     public function update(Request $request, int $id);
     public function delete(int $id);
 
-    public function verificarQR(string $codigo);
-    public function buscarCodigoReservasDelDiayComida(int $id);
+    public function getByUsuarioYFecha($usuarioId, $fecha);
+    // Admin
+    public function confirmar($id);
+    public function cancelar($id);
 
+    public function marcarAsistencia(Request $request);
 }

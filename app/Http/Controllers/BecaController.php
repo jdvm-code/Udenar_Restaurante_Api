@@ -24,7 +24,20 @@ class BecaController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->becaServices->store($request);
+        try{
+            $reserva = $this->becaServices->store($request);
+            return response()->json([
+                'success' => true,
+                'message' => 'Beca creada exitosamente',
+                'data' => $reserva,
+            ], 201);
+        }catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear beca: ' . $e->getMessage(),
+                'error' => $e->getTraceAsString(),
+            ], 500);
+        }
     }
 
     /**
@@ -51,8 +64,18 @@ class BecaController extends Controller
         return $this->becaServices->delete($id);
     }
 
-    public function getByUserId($userId)
+    public function getBecaActivaByUsuario($usuarioId)
     {
-        return $this->becaServices->getByUserId($userId);
+        return $this->becaServices->getBecaActivaByUsuario($usuarioId);
+    }
+
+    public function solicitar(Request $request)
+    {
+        return $this->becaServices->solicitar($request);
+    }
+
+    public function activar($id)
+    {
+        return $this->becaServices->activar($id);
     }
 }

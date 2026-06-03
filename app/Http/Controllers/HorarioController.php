@@ -15,7 +15,12 @@ class HorarioController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->horarioService->index($request);
+        $this->horarioService->index($request);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horarios retrieved successfully',
+            'data' => $this->horarioService->index($request),
+        ], 200);
     }
 
     /**

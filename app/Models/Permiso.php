@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'short_name'])]
+#[Fillable(['name'])]
 #[Table('Permisos')]
 
 class Permiso extends Model

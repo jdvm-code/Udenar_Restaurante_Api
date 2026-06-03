@@ -11,5 +11,5 @@ interface UserService {
     public function delete(int $id);
 
     public function cambiarPassword(int $id, string $passwordActual, string $nuevoPassword);
-
+    public function countAdmin();
 }

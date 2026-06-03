@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable(['dia', 'hora_inicio', 'hora_fin', 'cupo'])]
 #[Table('horarios')]
 
-class horario extends Model
+class Horario extends Model
 {
     //
 }

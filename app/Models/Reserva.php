@@ -21,9 +21,30 @@ class Reserva extends Model
         });
     }
 
-    public function becas()
+    public function beca()
     {
         // 'becas_id' es la columna en tu tabla 'reservas'
         return $this->belongsTo(Beca::class, 'becas_id');
     }
+
+    // Relación con Horario
+    public function horario()
+    {
+        return $this->belongsTo(Horario::class, 'horarios_id');
+    }
+
+    // Relación con Comida
+    public function comida()
+    {
+        return $this->belongsTo(Comida::class, 'comidas_id');
+    }
+
+    // Relación con EstadoReserva
+    public function estadoReserva()
+    {
+        return $this->belongsTo(EstadoReserva::class, 'estados_reservas_id');
+    }
+
+    //usuario
+
 }

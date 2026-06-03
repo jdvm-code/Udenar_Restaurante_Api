@@ -16,7 +16,12 @@ class EstadoReservaController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->estadoReserva->index($request);
+        $this->estadoReserva->index($request);
+        return response()->json([
+            'success' => true,
+            'message' => 'Estados de reservas',
+            'data' => $this->estadoReserva->index($request),
+        ], 200);
     }
 
     /**

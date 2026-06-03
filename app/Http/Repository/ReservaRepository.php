@@ -1,120 +1,162 @@
 <?php
+
 namespace App\Http\Repository;
 
 use App\Http\Services\ReservaService;
+use App\Models\horario;
 use App\Models\Reserva;
-use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
-class ReservaRepository extends BaseRepository implements ReservaService {
+class ReservaRepository extends BaseRepository implements ReservaService
+{
     public function __construct(private Reserva $model)
     {
         parent::__construct($model);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(\Illuminate\Http\Request $request)
+    public function confirmar($id)
     {
         try {
-            $data = $request->all();
-            return $this->model->create($data);
+            $reserva = Reserva::find($id);
 
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') {
-                throw new \Exception('Ya tienes una reserva registrada para este tipo de comida en la fecha seleccionada.', 409);
+            if (!$reserva) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Reserva no encontrada',
+                    'data' => null,
+                    'error' => 'ID inválido',
+                ], 404);
             }
-            throw $e;
+
+            $reserva->estados_reservas_id = 2; // Confirmada
+            $reserva->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Reserva confirmada',
+                'data' => $reserva,
+                'error' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al confirmar',
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
-       /**
-     * Implementación del método verificarQR definido en la interfaz ReservaService.
-      * Este método valida el código QR, verifica la fecha de la reserva y su estado.
-      * Lanza excepciones con mensajes claros para cada caso de error.
-     */
 
-    public function verificarQR(string $codigo)
+    public function cancelar($id)
     {
-        // 1. Buscar la reserva por el código único utilizando la instancia del modelo
-        $reserva = $this->model->where('codigo', $codigo)->first();
+        try {
+            $reserva = Reserva::find($id);
 
-        // Validación A: ¿Existe la reserva?
-        if (!$reserva) {
-            throw new \Exception('El código QR no es válido o la reserva no existe.', 404);
+            if (!$reserva) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Reserva no encontrada',
+                    'data' => null,
+                    'error' => 'ID inválido',
+                ], 404);
+            }
+
+            $reserva->estados_reservas_id = 3; // Cancelada
+            $reserva->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Reserva cancelada',
+                'data' => $reserva,
+                'error' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cancelar',
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // 2. Obtener fechas limpias forzando la zona horaria local
-        $hoy = Carbon::now('America/Bogota')->format('Y-m-d');
-        $fechaReserva = Carbon::parse($reserva->fecha_reserva)->format('Y-m-d');
-
-        // Validación B: ¿La reserva coincide con el día de hoy?
-        if ($fechaReserva !== $hoy) {
-            throw new \Exception("Esta reserva es para la fecha {$fechaReserva}, no para el día de hoy.", 400);
-        }
-
-        // Validación C: ¿La reserva está activa? (estados_reservas_id = 1)
-        if ($reserva->estados_reservas_id !== 1) {
-            throw new \Exception('Esta reserva ya ha sido utilizada o se encuentra inactiva.', 400);
-        }
-
-        //cambiar el estado de la reserva a "Asistio" (ejemplo: estados_reservas_id = 2)
-        $reserva->update(['estados_reservas_id' => 2]); // Ejemplo: 2 = Consumido
-
-        return $reserva;
     }
 
-    /**
-     * Actualiza una reserva existente.
-     */
-    public function update(Request $request, int $id)
+    public function getByUsuarioYFecha($usuarioId, $fecha)
     {
-        // 1. Buscar la reserva por su ID
-        $reserva = $this->model->find($id);
+        try {
+            $reservas = Reserva::join('becas', 'reservas.becas_id', '=', 'becas.id')
+                ->where('becas.users_id', $usuarioId)
+                ->where('reservas.fecha_reserva', $fecha)
+                ->select('reservas.*')
+                ->get();
 
-        if (!$reserva) {
-            throw new \Exception('La reserva no existe.', 404);
+            if ($reservas->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No hay reservas para esta fecha',
+                    'data' => null,
+                    'error' => 'No se encontraron reservas',
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Reservas encontradas',
+                'data' => $reservas,
+                'error' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al buscar reservas',
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // 2. [Opcional] Regla de negocio: No permitir cancelar si ya fue "Consumida" (ej: estado 2)
-        if ($request->input('estados_reservas_id') == 3 && $reserva->estados_reservas_id == 2) {
-            throw new \Exception('No se puede cancelar una reserva que ya ha sido consumida.', 400);
-        }
-
-        // 3. Actualizar los campos permitidos que vienen en el Request
-        $reserva->update($request->only(['estados_reservas_id', 'horarios_id', 'comidas_id']));
-
-        return $reserva;
     }
 
-    //buscar la el codigo QR del dia para un usuario y para cada comida
-    public function buscarCodigoReservasDelDiayComida(int $id){
-        $hoy = Carbon::now('America/Bogota')->format('Y-m-d');
+    public function marcarAsistencia(Request $request)
+    {
+        try {
+            $codigo = $request->input('codigo');
 
-        $reservas = $this->model
-            ->where('becas_id', $id)
-            ->whereDate('fecha_reserva', $hoy)
-            ->get(['comidas_id', 'codigo']);
+            $reserva = Reserva::where('codigo', $codigo)->first();
 
-        return $reservas;
-    }//que hace este metodo? busca las reservas del dia para un usuario y para cada comida, devuelve el codigo QR de cada reserva
-    //haz un ejemplo de la respuesta de este metodo: [
-    //  {
-    //    "comidas_id": 1,
-    //    "codigo": "abc123"
-    //  },
-    //  {
-    //    "comidas_id": 2,
-    //    "codigo": "def456"
-    //  }
-    //]
-    //como es el json que debo enviar para consumir este metodo? 
-    //No es necesario enviar un JSON, solo debes hacer una petición GET a la ruta correspondiente 
-    //con el ID del usuario, por ejemplo: GET /api/reservas/codigo-del-dia/1
-    //que rutas debo crear para consumir este metodo? Debes crear una ruta GET en tu archivo de rutas, 
-    //por ejemplo: Route::get('/reservas/codigo-del-dia/{id}', [ReservaController::class, 'buscarCodigoReservasDelDiayComida']);/
-     
+            if (!$reserva) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Código no encontrado',
+                    'data' => null,
+                    'error' => 'No existe reserva con este código',
+                ], 404);
+            }
 
-    
+            // Verificar si ya está en estado "Asistió" (2)
+            if ($reserva->estados_reservas_id == 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Ya registró asistencia',
+                    'data' => null,
+                    'error' => 'Esta reserva ya está marcada como Asistió',
+                ], 400);
+            }
+
+            // Cambiar estado a "Asistió" (2)
+            $reserva->estados_reservas_id = 2;
+            $reserva->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Asistencia registrada',
+                'data' => $reserva,
+                'error' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al marcar asistencia',
+                'data' => null,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

@@ -93,4 +93,8 @@ class UserController extends Controller
             ], $statusCode);
         }
     }
+
+    public function countAdmin(){
+        $this->userServices->countAdmin();
+    }
 }

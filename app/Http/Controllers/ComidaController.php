@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Services\ComidaService;
@@ -9,11 +10,15 @@ class ComidaController extends Controller
     public function __construct(private ComidaService $comidaService)
     {
         //
-     }
+    }
     public function index(Request $request)
     {
-     return $this->comidaService->index($request);
-
+        $this->comidaService->index($request);
+        return response()->json([
+            'success' => true,
+            'message' => 'Comidas listadas exitosamente',
+            'data' => $this->comidaService->index($request),
+        ], 200);
     }
 
     /**
@@ -22,7 +27,6 @@ class ComidaController extends Controller
     public function store(Request $request)
     {
         return $this->comidaService->store($request);
-
     }
 
     /**
@@ -30,7 +34,7 @@ class ComidaController extends Controller
      */
     public function show(string $id)
     {
-      return $this->comidaService->show($id);
+        return $this->comidaService->show($id);
     }
 
     /**
