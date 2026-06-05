@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\UserService;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -26,6 +27,7 @@ class AuthController extends Controller
                 'token' => $token,
             ], 201);
         } catch (\Exception $e) {
+            Log::error('Register error:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Registration failed',

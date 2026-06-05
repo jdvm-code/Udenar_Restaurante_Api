@@ -30,5 +30,10 @@ class Beca extends Model
     {
         return $this->belongsTo(EstadoBeca::class, 'estados_becas_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
     
 }

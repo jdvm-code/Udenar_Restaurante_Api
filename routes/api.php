@@ -47,6 +47,11 @@ Route::get('becas', [BecaController::class, 'index']);
 Route::post('reservas/asistencia', [ReservaController::class, 'marcarAsistencia']);
 Route::get('usuarios/count-admin', [UserController::class, 'countAdmin']);
 
+Route::post('mis-reservas', [ReservaController::class, 'misReservas']);
+Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
+Route::post('verificar-asistencia', [ReservaController::class, 'verificarAsistencia']);
+
+
 
 // ============================================
 // RUTAS PROTEGIDAS (Requieren Bearer Token)

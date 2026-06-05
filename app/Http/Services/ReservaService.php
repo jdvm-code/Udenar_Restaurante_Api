@@ -16,8 +16,12 @@ interface ReservaService
     public function getByUsuarioYFecha($usuarioId, $fecha);
     // Admin
     public function confirmar($id);
-    public function cancelar($id);
+    public function cancelar(Request $request, $id);
 
     public function marcarAsistencia(Request $request);
     public function estadoDia($usuarioId, $fecha);
+    
+    public function misReservas(Request $request);
+    public function verificarAsistencia(Request $request);
+
 }
