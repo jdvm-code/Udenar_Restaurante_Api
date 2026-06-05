@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AsistenciaService;
 use App\Http\Services\ReservaService;
+use App\Models\Beca;
 use App\Models\Horario;
 use App\Models\Reserva;
 use Illuminate\Http\Request;
@@ -66,84 +67,110 @@ class ReservaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+{
+    try {
+        // 1. BUSCAR BECA ACTIVA DEL USUARIO
+        // El cliente envía users_id, la API busca la beca automáticamente
+        $beca = Beca::where('users_id', $request->users_id)
+            ->where('estados_becas_id', 2) // Activa
+            ->first();
 
-        try {
-            $reservasExistentes = Reserva::join('becas', 'reservas.becas_id', '=', 'becas.id')
-                ->where('becas.users_id', $request->users_id)
-                ->where('reservas.fecha_reserva', $request->fecha_reserva)
-                ->count();
-
-            if ($reservasExistentes >= 2) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Límite de reservas alcanzado',
-                    'data' => null,
-                    'error' => 'Solo puede hacer 2 reservas por día (desayuno y almuerzo)',
-                ], 400);
-            }
-
-            // 2. Verificar que no repita el tipo de comida (desayuno/almuerzo)
-            $comidaExistente = Reserva::join('becas', 'reservas.becas_id', '=', 'becas.id')
-                ->join('horarios', 'reservas.horarios_id', '=', 'horarios.id')
-                ->where('becas.users_id', $request->users_id)
-                ->where('reservas.fecha_reserva', $request->fecha_reserva)
-                ->where('horarios.comidas_id', $request->comidas_id)
-                ->first();
-
-            if ($comidaExistente) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Ya tiene una reserva para este tipo de comida',
-                    'data' => null,
-                    'error' => 'Solo puede reservar una vez por desayuno y una por almuerzo',
-                ], 400);
-            }
-
-            // 3. Verificar cupo del horario
-            $reservasHorario = Reserva::where('horarios_id', $request->horarios_id)
-                ->where('fecha_reserva', $request->fecha_reserva)
-                ->count();
-
-            $horario = Horario::find($request->horarios_id);
-
-            if ($reservasHorario >= $horario->cupo) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Cupo agotado',
-                    'data' => null,
-                    'error' => 'No hay cupos disponibles para este horario',
-                ], 400);
-            }
-
-            // 4. Crear la reserva
-            $codigo = 'RES-' . strtoupper(uniqid());
-
-            $reserva = Reserva::create([
-                'becas_id' => $request->becas_id,
-                'horarios_id' => $request->horarios_id,
-                'comidas_id' => $request->comidas_id,
-                'estados_reservas_id' => 1, // Pendiente
-                'fecha_registro' => $request->fecha_registro,
-                'fecha_reserva' => $request->fecha_reserva,
-                'codigo' => $codigo,
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Reserva creada exitosamente',
-                'data' => $reserva,
-                'error' => null,
-            ], 201);
-        } catch (\Exception $e) {
+        if (!$beca) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear la reserva',
+                'message' => 'No tiene beca activa',
                 'data' => null,
-                'error' => $e->getMessage(),
-            ], 500);
+                'error' => 'El usuario no tiene una beca activa para reservar',
+            ], 400);
         }
+
+        $becaId = $beca->id;
+
+        // 2. VALIDAR LÍMITE DE RESERVAS (máximo 2 por día)
+        $reservasExistentes = Reserva::join('becas', 'reservas.becas_id', '=', 'becas.id')
+            ->where('becas.users_id', $request->users_id)
+            ->where('reservas.fecha_reserva', $request->fecha_reserva)
+            ->count();
+
+        if ($reservasExistentes >= 2) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Límite de reservas alcanzado',
+                'data' => null,
+                'error' => 'Solo puede hacer 2 reservas por día (desayuno y almuerzo)',
+            ], 400);
+        }
+
+        // 3. VALIDAR COMIDA NO REPETIDA (una por tipo: desayuno/almuerzo)
+        $comidaExistente = Reserva::join('becas', 'reservas.becas_id', '=', 'becas.id')
+            ->where('becas.users_id', $request->users_id)
+            ->where('reservas.fecha_reserva', $request->fecha_reserva)
+            ->where('reservas.comidas_id', $request->comidas_id)
+            ->first();
+
+        if ($comidaExistente) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ya tiene una reserva para este tipo de comida',
+                'data' => null,
+                'error' => 'Solo puede reservar una vez por desayuno y una por almuerzo',
+            ], 400);
+        }
+
+        // 4. VALIDAR CUPO DEL HORARIO
+        $reservasHorario = Reserva::where('horarios_id', $request->horarios_id)
+            ->where('fecha_reserva', $request->fecha_reserva)
+            ->count();
+
+        $horario = Horario::find($request->horarios_id);
+
+        if (!$horario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Horario no encontrado',
+                'data' => null,
+                'error' => 'El horario seleccionado no existe',
+            ], 400);
+        }
+
+        if ($reservasHorario >= $horario->cupo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cupo agotado',
+                'data' => null,
+                'error' => 'No hay cupos disponibles para este horario',
+            ], 400);
+        }
+
+        // 5. CREAR RESERVA
+        $codigo = 'RES-' . strtoupper(uniqid());
+
+        $reserva = Reserva::create([
+            'becas_id' => $becaId,        // ← Usar la beca encontrada, no la del request
+            'horarios_id' => $request->horarios_id,
+            'comidas_id' => $request->comidas_id,
+            'estados_reservas_id' => 1,   // Pendiente
+            'fecha_registro' => $request->fecha_registro,
+            'fecha_reserva' => $request->fecha_reserva,
+            'codigo' => $codigo,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Reserva creada exitosamente',
+            'data' => $reserva,
+            'error' => null,
+        ], 201);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al crear la reserva',
+            'data' => null,
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 
     /**
      * Display the specified resource.
@@ -216,5 +243,8 @@ class ReservaController extends Controller
         return $this->reservaService->marcarAsistencia($request);
     }
 
-
+    public function estadoDia($usuarioId, $fecha)
+    {
+        return $this->reservaService->estadoDia($usuarioId, $fecha);
+    }
 }

@@ -75,45 +75,48 @@ class BecaRepository extends BaseRepository implements BecaService
 
 
     public function solicitar(Request $request)
-    {
-        try {
-            $becaExistente = Beca::where('users_id', $request->users_id)
-                ->where('estados_becas_id', 2) // Activa
-                ->first();
+{
+    try {
+        // Verificar si tiene CUALQUIER beca (Activa o Pendiente)
+        $becaExistente = Beca::where('users_id', $request->users_id)
+            ->whereIn('estados_becas_id', [1, 2]) // 1=Pendiente, 2=Activa
+            ->first();
 
-            if ($becaExistente) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Ya tiene una beca activa',
-                    'data' => null,
-                    'error' => 'No puede solicitar otra beca',
-                ], 400);
-            }
-
-            // Crear beca con estado "Pendiente" (id=1)
-            $beca = Beca::create([
-                'users_id' => $request->users_id,
-                'fecha_inicio' => $request->fecha_inicio,
-                'fecha_fin' => $request->fecha_fin,
-                'estados_becas_id' => 1, // Pendiente - espera aprobación
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Solicitud de beca enviada. Esperando aprobación.',
-                'data' => $beca,
-                'error' => null,
-            ], 201);
-        } catch (\Exception $e) {
+        if ($becaExistente) {
+            $estado = $becaExistente->estados_becas_id == 1 ? 'Pendiente' : 'Activa';
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Error al solicitar beca',
+                'message' => "Ya tiene una beca {$estado}",
                 'data' => null,
-                'error' => $e->getMessage(),
-            ], 500);
+                'error' => 'No puede solicitar otra beca',
+            ], 400);
         }
-    }
 
+        // Crear beca con estado "Pendiente" (id=1)
+        $beca = Beca::create([
+            'users_id' => $request->users_id,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'estados_becas_id' => 1, // Pendiente
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitud de beca enviada. Esperando aprobación.',
+            'data' => $beca,
+            'error' => null,
+        ], 201);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al solicitar beca',
+            'data' => null,
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
     public function activar($id)
     {
         try {

@@ -35,9 +35,8 @@ Route::get('reservas/usuario/{usuarioId}/fecha/{fecha}', [ReservaController::cla
 //Reportes Reservas
 
 Route::apiResource('reservas', ReservaController::class);
+Route::get('reservas/estado-dia/{usuarioId}/{fecha}', [ReservaController::class, 'estadoDia']);
 
-// Filtros ya incluidos en index() via Query Params
-// /api/reservas?fecha=2026-06-03&estado=1&comida=1
 
 // Acciones admin
 Route::put('reservas/{id}/confirmar', [ReservaController::class, 'confirmar']);

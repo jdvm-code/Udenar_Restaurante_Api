@@ -3,7 +3,7 @@
 namespace App\Http\Repository;
 
 use App\Http\Services\ReservaService;
-use App\Models\horario;
+use App\Models\Beca;
 use App\Models\Reserva;
 use Illuminate\Http\Request;
 
@@ -159,4 +159,49 @@ class ReservaRepository extends BaseRepository implements ReservaService
             ], 500);
         }
     }
+
+    public function estadoDia($usuarioId, $fecha)
+{
+    try {
+        // Obtener reservas del usuario para esa fecha
+        $reservas = Reserva::join('becas', 'reservas.becas_id', '=', 'becas.id')
+                           ->where('becas.users_id', $usuarioId)
+                           ->where('reservas.fecha_reserva', $fecha)
+                           ->select('reservas.comidas_id', 'reservas.estados_reservas_id')
+                           ->get();
+
+        // Verificar si tiene beca activa
+        $beca = Beca::where('users_id', $usuarioId)
+                    ->where('estados_becas_id', 2) // Activa
+                    ->first();
+
+        $tieneBecaActiva = $beca != null;
+
+        // Determinar qué puede reservar
+        $puedeDesayuno = !$reservas->contains('comidas_id', 1);
+        $puedeAlmuerzo = !$reservas->contains('comidas_id', 2);
+        $totalReservas = $reservas->count();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Estado del día',
+            'data' => [
+                'tiene_beca_activa' => $tieneBecaActiva,
+                'total_reservas' => $totalReservas,
+                'puede_desayuno' => $puedeDesayuno,
+                'puede_almuerzo' => $puedeAlmuerzo,
+                'comidas_reservadas' => $reservas->pluck('comidas_id')->toArray(),
+            ],
+            'error' => null,
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al obtener estado',
+            'data' => null,
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 }

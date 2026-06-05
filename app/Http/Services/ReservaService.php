@@ -19,4 +19,5 @@ interface ReservaService
     public function cancelar($id);
 
     public function marcarAsistencia(Request $request);
+    public function estadoDia($usuarioId, $fecha);
 }
